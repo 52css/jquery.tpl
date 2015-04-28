@@ -1,0 +1,48 @@
+/**
+ * Created by Ivan on 14-2-13.
+ */
+@charset "utf-8";
+/*reset*/
+body{
+	line-height:1.4;
+	color:#333;
+	font-size:12px;
+	font-family:\5FAE\8F6F\96C5\9ED1;
+	/*,\5B8B\4F53,\9ED1\4F53,Arial, Helvetica, sans-serif*/
+}body,h1,h2,h3,h4,h5,h6,p,ul,ol,dl,dd,form{
+	 margin:0;
+ }
+ul,ol{
+	padding-left:0;
+	list-style-type:none;
+}
+h4,h5,h6{
+	font-size:1em;
+}
+input,textarea,select{
+	font-size:100%;
+	font-family:inherit;
+}
+img{
+	border:0;
+}
+a{
+	text-decoration:none;
+}
+/*a:hover{*/
+/*text-decoration:underline;*/
+/*}*/
+input[type=radio],input[type=checkbox],.rdo,.ckb{
+	vertical-align:middle; margin-top:-2px; margin-bottom:1px;
+}
+select{
+	font-family: tahoma, arial, sans-serif;
+	line-height: 1.5;
+	vertical-align: middle;
+	padding: 2px;
+	border: 1px solid #bababa;
+}
+table{
+	border-collapse: collapse;
+	width:100%;
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html><html><head><meta charset=UTF-8><title></title><link rel=stylesheet href=css/reset.min.css></head><body><style>
+  body {
+    background-color: #f4f4f4;
+    font-family: Helvetica Neue, arial, verdana, \5FAE\8F6F\96C5\9ED1;
+  }
+
+  .wrap {
+    width: 800px;
+    margin: 0 auto;
+  }
+
+  .h1 {
+    color: #708090;
+    text-shadow: 0 1px 2px #fff;
+    font-size: 4em;
+    text-align: center;
+    margin: 1.5em 0;
+  }
+
+  .h2 {
+    text-shadow: 0 1px 2px #fff;
+    margin: .5em 0;
+  }
+
+  .small {
+    font-weight: 200;
+    font-size: 14px;
+  }
+
+  :root .radio {
+    display: none;
+  }
+
+  :root .radio-lbl {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    vertical-align: middle;
+    margin: 4px;
+    padding: 4px 8px;
+    background: #DDD;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .radio:checked + .radio-lbl {
+    background: #fa8072;
+    color: #FFF;
+  }
+
+  .checkbox-wrap {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    vertical-align: middle;
+  }
+
+  .box {
+    width: 48%;
+    margin: 4px 2% 4px 0;
+    float: left;
+    min-width: 300px;
+  }
+
+  .h4 {
+    margin: 4px 0;
+    font-weight: 400;
+    font-size: 20px;
+  }
+
+  .input {
+    border: 1px solid lightgrey;
+    outline: none;
+    font-size: 14px;
+    width: 96%;
+    height: 210px;
+    padding: 10px;
+    text-align: left;
+  }
+
+  .cb {
+    clear: both;
+  }
+
+  .result {
+    background: #DDD;
+    height: 212px;
+    padding: 10px;
+    font-size: 14px;
+    overflow-y: auto;
+  }
+
+  .mb8e {
+    margin-bottom: 8em;
+  }
+  </style><div class=wrap><h1 class=h1>$.tpl</h1><h2 class=h2>Usage <span class=small>play with it, edit and see results as you type</span></h2><div class=radio-wrap><input type=radio name=radio value=0 id=radio1 class=radio checked> <label for=radio1 class=radio-lbl>基本</label> <input type=radio name=radio value=1 id=radio2 class=radio> <label for=radio2 class=radio-lbl>数组循环</label> <input type=radio name=radio value=2 id=radio3 class=radio> <label for=radio3 class=radio-lbl>对象循环</label> <input type=radio name=radio value=3 id=radio4 class=radio> <label for=radio4 class=radio-lbl>条件判断</label> <input type=radio name=radio value=4 id=radio5 class=radio> <label for=radio5 class=radio-lbl>加密</label> <input type=radio name=radio value=5 id=radio6 class=radio> <label for=radio6 class=radio-lbl>代码片段</label><div class=checkbox-wrap><input type=checkbox id=checkbox1 checked> <label for=checkbox1>wrap</label></div></div><div class=box><h4 class=h4>模板</h4><textarea id=template class=input></textarea></div><div class=box><h4 class=h4>模板解析</h4><div id=compile class=result></div></div><div class=cb></div><div class=box><h4 class=h4>数据</h4><textarea id=data class=input></textarea></div><div class=box><h4 class=h4>结果</h4><div id=result class=result></div></div><div class=mb8e>&nbsp;</div></div><script src=js/jquery-1.10.2.min.js></script><script src=js/jquery.tpl.min.js></script><script src=js/$.input.min.js></script><script>
+  $(function() {
+    var $template = $("#template"),
+      $compile = $("#compile"),
+      $data = $("#data"),
+      $result = $("#result"),
+      $radio = $("[name=radio]");
+
+    function fnResult() {
+      var templateVal = $template.val(),
+        dataVal = $data.val(),
+        viewModel,
+        sFncompile;
+      $compile.html("");
+      $result.html("");
+      if ($.trim(templateVal) !== "") {
+        $.viewModel.wrap = $("#checkbox1").prop("checked");
+        viewModel = $.viewModel(templateVal);
+        sFncompile = viewModel.data("fnCompile").toString();
+        $compile.text(sFncompile);
+        if ($.trim(dataVal) !== "") {
+          $result.html(viewModel.encode($.parseJSON(dataVal)));
+        }
+      }
+    }
+
+    function fnRadioChecked() {
+      switch ($("[name=radio]:checked").val()) {
+        case "0":
+          $template.val("\n\n<div>Hi {{=it.name}}!</div>\n<div>{{=it.age || ''}}</div>");
+          $data.val('{"name":"Jake","age":31}');
+          break;
+        case "1":
+          $template.val("{{@it.array:value:index}}\n<div>{{=value}}!</div>\n{{@}}");
+          $data.val('{"array":["banana","apple","orange"]}');
+          break;
+        case "2":
+          $template.val("{{~it:value:key}}\n<div>{{=key}}!</div>\n{{~}}");
+          $data.val('{"name":"Jake","age":31,"mother":"Kate","father":"John","interests":["basketball","hockey","photography"],"contact":{"email":"jake@xyz.com","phone":"999999999"}}');
+          break;
+        case "3":
+          $template.val("{{? it.name }}\n<div>Oh, I love your name, {{=it.name}}!</div>\n{{?? it.age === 0}}\n<div>Guess nobody named you yet!</div>\n{{??}}\nYou are {{=it.age}} and still don't have a name?\n{{?}}");
+          $data.val('{"name":"Jake","age":31}');
+          break;
+        case "4":
+          $template.val("Visit {{!it.uri}}");
+          $data.val('{"uri":"http://bebedo.com/?keywords=Yoga"}');
+          break;
+        case "5":
+          $template.val("{{##joke\n<div>{{=it.name}} who?</div>\n#joke}}\n{{##snippet\n<div>{{=it.name}}</div>{{#joke}}\n#snippet}}\n{{#snippet}}");
+          $data.val('{"name":"Jake","age":31}');
+          break;
+      }
+      fnResult();
+    }
+
+    $radio.click(fnRadioChecked);
+    $template.add($data).input(fnResult);
+    $("#checkbox1").click(fnResult);
+    //init
+    fnRadioChecked();
+  });
+  </script></body></html>
